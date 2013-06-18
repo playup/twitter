@@ -56,6 +56,25 @@ module Twitter
 
     # @return [Enumerable]
     def each
+      cursor_idx = -1
+      do  
+        cursor = @client.send(@method_name.to_sym, @method_options.merge(:cursor => cursor_idx))
+        page_items = cursor.collection
+        ptus "curr page: #{page_items}"
+        page_items.each do |element|
+          yield element
+        end
+        cursor_idx = cursor.next_cursor
+      end until cursor.last? 
+    end
+
+    def all_items
+      self.each.with_object([]) { |arr, element| arr << element }
+    end
+
+
+    # @return [Enumerable]
+    def old_each
       all(collection, next_cursor).each do |element|
         yield element
       end
