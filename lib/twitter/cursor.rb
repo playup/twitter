@@ -57,7 +57,7 @@ module Twitter
     # @return [Enumerable]
     def each
       cursor_idx = -1
-      do  
+      begin  
         cursor = @client.send(@method_name.to_sym, @method_options.merge(:cursor => cursor_idx))
         page_items = cursor.collection
         ptus "curr page: #{page_items}"
